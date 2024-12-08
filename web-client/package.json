@@ -9,7 +9,8 @@
     "lint": "next lint",
     "format:write": "prettier --write src/",
     "format:check": "prettier --check src/",
-    "test": "vitest"
+    "test": "vitest",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.62.3",
@@ -30,6 +31,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@playwright/test": "^1.49.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
