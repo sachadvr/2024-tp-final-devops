@@ -13,19 +13,24 @@ services:
       - vote-api
     networks:
       - app-network
+    volumes:
+      - ./web-client:/usr/src/app
 
   vote-api:
     build:
       context: .
       dockerfile: ./infrastructure/API/Dockerfile
     environment:
-      - PG_URL=postgres://postgres:postgres@db:5432/vote_db
+      - PG_URL=postgres://postgres:postgres@db:5432/vote_db?sslmode=disable
     ports:
       - "8080:8080"
     depends_on:
       - db
     networks:
       - app-network
+    volumes:
+      - ./vote-api:/usr/src/app
+
 
   docs:
     build:
@@ -35,6 +40,8 @@ services:
       - "4000:3000"
     networks:
       - app-network
+    volumes:
+      - ./docs:/usr/src/app
 
   db:
     image: postgres:17
