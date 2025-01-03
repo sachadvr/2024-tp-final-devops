@@ -1,11 +1,16 @@
 version: '3.9'
+
 services:
   web-client:
     build:
       context: .
       dockerfile: ./infrastructure/Dockerfile
+      target: development
+    volumes:
+      - ./web-client:/usr/src/app
+      - /usr/src/app/node_modules
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - VOTE_API_BASE_URL=http://vote-api:8080
     ports:
       - "3000:3000"
@@ -13,13 +18,14 @@ services:
       - vote-api
     networks:
       - app-network
-    volumes:
-      - ./web-client:/usr/src/app
 
   vote-api:
     build:
       context: .
       dockerfile: ./infrastructure/API/Dockerfile
+      target: development
+    volumes:
+      - ./vote-api:/usr/src/app
     environment:
       - PG_URL=postgres://postgres:postgres@db:5432/vote_db?sslmode=disable
     ports:
@@ -28,20 +34,19 @@ services:
       - db
     networks:
       - app-network
-    volumes:
-      - ./vote-api:/usr/src/app
-
 
   docs:
     build:
       context: .
       dockerfile: ./infrastructure/Doc/Dockerfile
+      target: development
+    volumes:
+      - ./docs:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
       - "4000:4000"
     networks:
       - app-network
-    volumes:
-      - ./docs:/usr/src/app
 
   db:
     image: postgres:17

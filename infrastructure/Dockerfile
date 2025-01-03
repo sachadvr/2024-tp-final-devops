@@ -1,27 +1,28 @@
-FROM node:lts as builder
+FROM node:23-alpine AS base
 
-WORKDIR /app
-
-COPY ./web-client/package.json ./web-client/yarn.lock ./
-COPY ./web-client/next.config.ts ./
-
-RUN yarn install --frozen-lockfile
-
+WORKDIR /usr/src/app
+COPY ./web-client/package*.json ./
+RUN yarn install
 COPY ./web-client ./
 
+
+FROM base AS development
+EXPOSE 3000
+CMD ["yarn", "dev"]
+
+
+FROM base AS builder
 RUN yarn build
 
-FROM node:lts as runner
 
-WORKDIR /app
-
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.ts ./
-
-RUN yarn install --production --frozen-lockfile
+FROM node:23-alpine AS production
+WORKDIR /usr/src/app
+COPY --from=builder /usr/src/app/.next ./.next
+COPY --from=builder /usr/src/app/public ./public
+COPY --from=builder /usr/src/app/yarn.lock ./
+COPY --from=builder /usr/src/app/package*.json ./
+RUN yarn install --production
+USER node
 
 EXPOSE 3000
-
 CMD ["yarn", "start"]
