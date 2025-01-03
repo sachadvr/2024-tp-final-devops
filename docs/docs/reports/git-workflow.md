@@ -3,7 +3,7 @@
 ## Branch Management
 We use Gitflow for branch management:
 - `main`: Production-ready code.
-- `develop`: Integration branch for features.
+- `demo/demo`: Integration branch for features.
 - `feature/*`: Feature branches.
 - `release/*`: Release branches.
 - `hotfix/*`: Hotfix branches.
@@ -19,7 +19,7 @@ We use Gitflow for branch management:
 ## Creating a Hotfix
 1. Create a branch from `main`: `hotfix/<issue>`
 2. Fix the issue.
-3. Merge back into `main` and `develop`.
+3. Merge back into `main` and `demo/demo`.
 4. Deploy the hotfix.
 
 ## Contributing
@@ -41,4 +41,4 @@ gitmoji -c
 ```
 
 4. Push to your fork.
-5. Create a pull request to `develop`.
+5. Create a pull request to `demo/demo`.
