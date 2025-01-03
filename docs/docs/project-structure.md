@@ -23,3 +23,14 @@ It is written in **Go** because go is fun.
 
 It is built with **[Docusaurus](https://docusaurus.io/)** and is a simple static website with no backend.
 
+
+### Start locally
+
+```bash
+make start
+```
+
+### Start with production environment
+```bash
+make prod-start
+```
