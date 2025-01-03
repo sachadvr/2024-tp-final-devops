@@ -20,14 +20,15 @@ jobs:
   test-and-lint:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Run Linter
         run: |
           echo "Running lint... (for now to test)"
+
       - name: Run Tests
         run: |
           echo "Running tests... (for now to test)"
@@ -39,6 +40,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Merge into main
         run: |
