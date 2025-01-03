@@ -7,14 +7,14 @@ on:
 
   pull_request:
     branches:
-      - develop
+      - demo/demo
 
   workflow_dispatch:
     inputs:
       target_branch:
         description: "Branch to merge into main"
         required: true
-        default: "develop"
+        default: "demo/demo"
 
 jobs:
   test-and-lint:
