@@ -1,23 +1,35 @@
-FROM node:lts as builder
+FROM node:23-alpine AS base
 
-WORKDIR /docs
-
-COPY ./docs/package.json ./docs/yarn.lock ./
-
+WORKDIR /usr/src/app
+COPY --chown=nobody:nobody ./docs ./
 RUN yarn install
 
-COPY ./docs ./
-
-RUN yarn build
-
-FROM nginx:alpine
-
-RUN rm /etc/nginx/conf.d/default.conf
-
-COPY ./infrastructure/Doc/nginx.conf /etc/nginx/conf.d/default.conf
-
-COPY --from=builder /docs/build /usr/share/nginx/html
-
+FROM base AS development
+USER nobody
 EXPOSE 4000
+CMD ["yarn", "start"]
 
-CMD ["nginx", "-g", "daemon off;"]
+
+FROM base AS builder
+RUN yarn run build
+
+
+FROM nginx:stable-alpine AS production
+
+COPY ./infrastructure/Doc/nginx.conf /etc/nginx/nginx.conf
+
+WORKDIR /usr/share/nginx/html
+COPY --chown=nobody:nobody --from=builder /usr/src/app/build ./
+
+RUN chown -R nobody:nobody /usr/share/nginx/html \
+    && chmod -R 755 /usr/share/nginx/html \
+    && chown -R nobody:nobody /var/cache/nginx \
+    && chown -R nobody:nobody /etc/nginx \
+    && chown -R nobody:nobody /var/log/nginx \
+    && chmod 1777 /tmp
+
+USER nobody
+
+EXPOSE 80
+
+CMD ["nginx", "-c", "/etc/nginx/nginx.conf"]
