@@ -1,0 +1,49 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - develop
+
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: "Branch to merge into main"
+        required: true
+        default: "develop"
+
+jobs:
+  test-and-lint:
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Linter
+        run: |
+          echo "Running lint... (for now to test)"
+      - name: Run Tests
+        run: |
+          echo "Running tests... (for now to test)"
+
+  merge-to-main:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Merge into main
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions@github.com"
+          git checkout main
+          git merge ${{ github.event.inputs.target_branch }}
+          git push origin main
