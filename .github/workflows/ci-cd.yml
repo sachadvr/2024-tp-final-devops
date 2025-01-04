@@ -71,6 +71,7 @@ jobs:
 
 
   merge-to-main:
+    needs: test-and-lint
     if: >
       github.event_name == 'workflow_dispatch' &&
       github.ref == 'refs/heads/demo/demo'
@@ -90,6 +91,7 @@ jobs:
           git push origin main
 
   deploy-to-production:
+    needs: merge-to-main
     if: >
       github.event_name == 'workflow_dispatch' &&
       github.ref == 'refs/heads/main'
