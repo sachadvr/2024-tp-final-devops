@@ -2,6 +2,7 @@
 
 ## What We Have Done
 
+- Look for mermaid diagrams -> in `structure.md`.
 - Built Docker images for `web-client`, `vote-api`, and `docs`.
 - Created Docker Compose files (prod & dev) to run the applications with the database.
 - Set up a CI/CD pipeline with GitHub Actions.
