@@ -7,22 +7,26 @@ on:
   push:
     branches:
       - '**'
+
   workflow_call:
 
 jobs:
   test-and-lint:
+    if: ${{ github.event_name != 'workflow_call' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        
       - name: Run Linter
         run: echo "Running lint... (Not implemented)"
+        
       - name: Run Tests
         run: echo "Running tests... (Not implemented)"
 
   merge-to-main:
     if: >
-      ${{ github.event_name == 'workflow_call' }} &&
+      github.event_name == 'workflow_call' &&
       github.ref == 'refs/heads/demo/demo'
     runs-on: ubuntu-latest
     steps:
@@ -30,6 +34,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          
       - name: Merge into main
         run: |
           git config --global user.name "GitHub Actions"
@@ -40,12 +45,12 @@ jobs:
 
   deploy-to-production:
     if: >
-      ${{ github.event_name == 'workflow_call' }} &&
+      github.event_name == 'workflow_call' &&
       github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to Production (SSH -> VPS)
-        uses: appleboy/ssh-action@v0.1.17
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.PRODUCTION_HOST }}
           username: ${{ secrets.PRODUCTION_USER }}
