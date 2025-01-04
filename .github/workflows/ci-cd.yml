@@ -9,10 +9,15 @@ on:
       - '**'
   workflow_call:
   workflow_dispatch:
+    inputs:
+      SKIPTEST:
+        description: 'Skip tests'
+        required: false
+        default: 'FALSE'
 
 jobs:
   test-and-lint:
-    if: ${{ github.event_name != 'workflow_call' }}
+    if: ${{ github.event_name != 'workflow_call' && github.event.inputs.SKIPTEST != 'TRUE' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -110,8 +115,8 @@ jobs:
             docker tag 2024-tp-final-devops-web-client:latest sachadvr/web-client:latest
             docker push sachadvr/web-client:latest
 
-            docker tag 2024-tp-final-devops_vote-api:latest sachadvr/vote-api:latest
+            docker tag 2024-tp-final-devops-vote-api:latest sachadvr/vote-api:latest
             docker push sachadvr/vote-api:latest
 
-            docker tag 2024-tp-final-devops_docs:latest sachadvr/docs:latest
+            docker tag 2024-tp-final-devops-docs:latest sachadvr/docs:latest
             docker push sachadvr/docs:latest
