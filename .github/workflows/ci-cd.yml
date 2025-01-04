@@ -27,7 +27,7 @@ jobs:
   merge-to-main:
     if: >
       github.event_name == 'workflow_dispatch' &&
-      github.ref == 'refs/heads/demo/demo'  # Condition pour action manuelle sur demo/demo
+      github.ref == 'refs/heads/demo/demo'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -46,7 +46,7 @@ jobs:
   deploy-to-production:
     if: >
       github.event_name == 'workflow_dispatch' &&
-      github.ref == 'refs/heads/main'  # Condition pour action manuelle sur main
+      github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to Production (SSH -> VPS)
