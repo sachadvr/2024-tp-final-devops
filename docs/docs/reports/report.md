@@ -1,23 +1,42 @@
 # Project Report (Sacha & Théo)
 
-## What I Have Done
+## What We Have Done
 
 - Built Docker images for `web-client`, `vote-api`, and `docs`.
-- Created a Docker Compose file (prod & dev) to run the applications with the database.
+- Created Docker Compose files (prod & dev) to run the applications with the database.
 - Set up a CI/CD pipeline with GitHub Actions.
 - Deployed the applications.
+
+## Tests
+
+The tests are run using GitHub Actions. They are executed on every push and pull request.
+
+## Automatic Merge
+
+- When the pipeline is triggered on the `demo/demo` branch, it will run the tests and merge the `demo/demo` branch into `main` if the tests pass.
 
 ## Deployment
 
 - Applications are deployed using Docker Compose.
-- CI/CD pipeline handles the deployment process.
-- The pipelines are now running on GitHub Actions & triggered on pull & push requests.
+- The CI/CD pipeline handles the deployment process.
+- Manual deployment is chosen, so we need to run a pipeline on `main` to deploy the applications.
+- Tests are run before deployment.
+- The application is deployed on a VPS with Docker installed.
+- A reverse proxy is used to route the traffic to the correct application.
+- A domain name is used to access the applications (docs/showcase).sachadvr.fr
 
 ## Links (Not deployed yet)
 
 - [Deployed Web Client](http://showcase.sachadvr.fr)
-- [Deployed Vote API](http://showcase.sachadvr.fr/api/trpc/movies) - But it is not a public API, so only the `web-client` can access it.
+- [Deployed Vote API](http://showcase.sachadvr.fr/api/trpc/movies)
+  This is not a public API, so only the `web-client` can access it for security reasons.
 - [Deployed Docs](https://docs.sachadvr.fr)
+
+## Images
+
+- [Docker Hub - Web Client](https://hub.docker.com/repository/docker/sachadvr/web-client)
+- [Docker Hub - Vote API](https://hub.docker.com/repository/docker/sachadvr/vote-api)
+- [Docker Hub - Docs](https://hub.docker.com/repository/docker/sachadvr/docs)
 
 ## Contributing
 
