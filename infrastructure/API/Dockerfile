@@ -1,8 +1,8 @@
 FROM golang:1.23.4-alpine AS base
 WORKDIR /usr/src/app
-COPY ./vote-api/go.mod ./vote-api/go.sum ./
+COPY ./go.mod ./go.sum ./
 RUN go mod download
-COPY ./vote-api ./
+COPY ./ ./
 
 FROM base AS development
 RUN go install github.com/githubnemo/CompileDaemon@latest
@@ -11,9 +11,9 @@ CMD ["CompileDaemon", "--build=go build -o main .", "--command=./main"]
 
 FROM golang:1.23.4-alpine AS builder
 WORKDIR /usr/src/app
-COPY ./vote-api/go.mod ./vote-api/go.sum ./
+COPY ./go.mod ./go.sum ./
 RUN go mod download
-COPY ./vote-api ./
+COPY ./ ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o vote-api .
 
 FROM alpine:latest AS production

@@ -9,6 +9,7 @@
 ## Deployment
 - Applications are deployed using Docker Compose.
 - CI/CD pipeline handles the deployment process.
+- The pipelines are now running on GitHub Actions & triggered on pull & push requests.
 
 ## Links (Not deployed yet)
 - [Deployed Web Client](#)
