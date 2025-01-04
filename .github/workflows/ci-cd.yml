@@ -69,20 +69,18 @@ jobs:
         working-directory: ./vote-api
         run: go test ./... -v
 
-
-  merge-to-main:
-    needs: test-and-lint
-    if: >
-      github.event_name == 'workflow_dispatch' &&
-      github.ref == 'refs/heads/demo/demo'
+  merge-or-deploy:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    needs: [test-and-lint]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          
+      
       - name: Merge into main
+        if: ${{ github.ref_name == 'demo/demo' }}
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions@github.com"
@@ -90,14 +88,8 @@ jobs:
           git merge demo/demo
           git push origin main
 
-  deploy-to-production:
-    needs: merge-to-main
-    if: >
-      github.event_name == 'workflow_dispatch' &&
-      github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
       - name: Deploy to Production (SSH -> VPS)
+        if: ${{ github.ref_name == 'main' }}
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.PRODUCTION_HOST }}
