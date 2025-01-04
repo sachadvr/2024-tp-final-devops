@@ -1,52 +1,56 @@
 name: CI/CD Pipeline
 
 on:
-  push:
-    branches:
-      - main
-
   pull_request:
     branches:
-      - demo/demo
-
-  workflow_dispatch:
-    inputs:
-      target_branch:
-        description: "Branch to merge into main"
-        required: true
-        default: "demo/demo"
+      - '**'
+  push:
+    branches:
+      - '**'
+  workflow_call:
 
 jobs:
   test-and-lint:
-    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Run Linter
-        run: |
-          echo "Running lint... (for now to test)"
-
+        run: echo "Running lint... (Not implemented)"
       - name: Run Tests
-        run: |
-          echo "Running tests... (for now to test)"
+        run: echo "Running tests... (Not implemented)"
 
   merge-to-main:
-    if: ${{ github.event_name == 'workflow_dispatch' }}
+    if: >
+      ${{ github.event_name == 'workflow_call' }} &&
+      github.ref == 'refs/heads/demo/demo'
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
       - name: Merge into main
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions@github.com"
           git checkout main
-          git merge ${{ github.event.inputs.target_branch }}
+          git merge demo/demo
           git push origin main
+
+  deploy-to-production:
+    if: >
+      ${{ github.event_name == 'workflow_call' }} &&
+      github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Production (SSH -> VPS)
+        uses: appleboy/ssh-action@v0.1.17
+        with:
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USER }}
+          key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          script: |
+            cd /path/to/your/project
+            git pull origin main
+            docker-compose -f docker-compose.prod.yml up --build -d
