@@ -99,3 +99,14 @@ jobs:
             cd 2024-tp-final-devops
             git pull origin main
             docker compose -f docker-compose.prod.yml up --build -d
+
+      - name: Deploy to Docker Hub
+        if: ${{ github.ref_name == 'main' }}
+        run: |
+            echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+            docker tag 2024-tp-final-devops-web-client:latest ${{ secrets.DOCKER_USERNAME }}/web-client:latest
+            docker push ${{ secrets.DOCKER_USERNAME }}/web-client:latest
+            docker tag 2024-tp-final-devops-vote-api:latest ${{ secrets.DOCKER_USERNAME }}/vote-api:latest
+            docker push ${{ secrets.DOCKER_USERNAME }}/vote-api:latest
+            docker tag 2024-tp-final-devops-docs:latest ${{ secrets.DOCKER_USERNAME }}/docs:latest
+            docker push ${{ secrets.DOCKER_USERNAME }}/docs:latest
