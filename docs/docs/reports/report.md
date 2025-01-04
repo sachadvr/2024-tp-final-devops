@@ -12,9 +12,9 @@
 - The pipelines are now running on GitHub Actions & triggered on pull & push requests.
 
 ## Links (Not deployed yet)
-- [Deployed Web Client](#)
-- [Deployed Vote API](#)
-- [Deployed Docs](#)
+- [Deployed Web Client](http://showcase.sachadvr.fr)
+- [Deployed Vote API](http://showcase.sachadvr.fr/api/trpc/movies) - But it is not a public API, so only the `web-client` can access it.
+- [Deployed Docs](https://docs.sachadvr.fr)
 
 ## Contributing
 - Follow the Git workflow documented in `git-workflow.md`.
