@@ -107,11 +107,11 @@ jobs:
           username: ${{ secrets.PRODUCTION_USER }}
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
           script: |
-            docker tag 2024-tp-final-devops-web-client-1:latest sachadvr/web-client:latest
+            docker tag 2024-tp-final-devops-web-client:latest sachadvr/web-client:latest
             docker push sachadvr/web-client:latest
 
-            docker tag 2024-tp-final-devops_vote-api-1:latest sachadvr/vote-api:latest
+            docker tag 2024-tp-final-devops_vote-api:latest sachadvr/vote-api:latest
             docker push sachadvr/vote-api:latest
 
-            docker tag 2024-tp-final-devops_docs-1:latest sachadvr/docs:latest
+            docker tag 2024-tp-final-devops_docs:latest sachadvr/docs:latest
             docker push sachadvr/docs:latest
