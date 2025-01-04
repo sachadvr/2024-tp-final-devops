@@ -1,8 +1,8 @@
 ---
 slug: assignement
 title: Assignement
-authors: [ anthony ]
-tags: [ ]
+authors: [anthony]
+tags: []
 ---
 
 ## Objectives
@@ -117,4 +117,4 @@ I suggest you do things in the following order:
 
 ---
 
-*Any information related to the project can be found in the documentation*
+_Any information related to the project can be found in the documentation_

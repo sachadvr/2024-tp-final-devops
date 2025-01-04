@@ -70,5 +70,3 @@ Check if code is formatted
 ```bash
 yarn format:check
 ```
-
-

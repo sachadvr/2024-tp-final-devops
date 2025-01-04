@@ -7,12 +7,14 @@
 
 **Environment variables**
 
-*None*
+_None_
 
 ## Commands
+
 **All commands must be run from the `docs` directory**
 
 ### Install dependencies
+
 ```bash
 yarn
 ```
@@ -24,11 +26,13 @@ yarn start
 ```
 
 ### Build
+
 ```bash
 yarn build
 ```
 
 ### Other commands
+
 Docusaurus provides a lot of helpful commands to manage and **deploy** the documentation.
 
 For more information, see the [Docusaurus documentation](https://docusaurus.io/docs)
