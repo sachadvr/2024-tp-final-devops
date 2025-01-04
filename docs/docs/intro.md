@@ -45,7 +45,9 @@ But they sometime need an environment when the product owner is reviewing someth
 They both need to be able to perform their tasks independently.
 
 ## Definition of Done
+
 ### Before production, Every new code added to project
+
 - must keep the unit tests working
 - must keep the e2e tests working
 - must keep the linter running
