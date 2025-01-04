@@ -92,6 +92,10 @@ jobs:
           git checkout main
           git merge demo/demo
           git push origin main
+          new_tag=$(git describe --tags $(git rev-list --tags --max-count=1) | awk -F. '{print $1 "." $2 "." $3+1}')
+          git tag $new_tag
+          git push origin $new_tag
+          
 
       - name: Deploy to Production (SSH -> VPS)
         if: ${{ github.ref_name == 'main' }}
