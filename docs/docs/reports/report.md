@@ -25,12 +25,12 @@ The tests are run using GitHub Actions. They are executed on every push and pull
 - A reverse proxy is used to route the traffic to the correct application.
 - A domain name is used to access the applications (docs/showcase).sachadvr.fr
 
-## Links (Not deployed yet)
+## Links (Fully Functional)
 
 - [Deployed Web Client](http://showcase.sachadvr.fr)
 - [Deployed Vote API](http://showcase.sachadvr.fr/api/trpc/movies)
   This is not a public API, so only the `web-client` can access it for security reasons.
-- [Deployed Docs](https://docs.sachadvr.fr)
+- [Deployed Docs](http://docs.sachadvr.fr)
 
 ## Images
 
