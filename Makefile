@@ -10,6 +10,9 @@ down:
 prod-start:
 	docker compose -f $(DOCKER_COMPOSE_PROD_FILE) up -d
 
+prod-build:
+	docker compose -f $(DOCKER_COMPOSE_PROD_FILE) up --build 
+
 prod-down:
 	docker compose -f $(DOCKER_COMPOSE_PROD_FILE) down
 
