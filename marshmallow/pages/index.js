@@ -9,6 +9,7 @@ export default function Home({ lastUpload }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentFile, setCurrentFile] = useState('');
   const [isNotificationError, setIsNotificationError] = useState(false);
+  const [link, setLink] = useState('');
 
   const fetchFile = useCallback(async () => {
     try {
@@ -16,6 +17,10 @@ export default function Home({ lastUpload }) {
       if (res.ok) {
         const data = await res.text();
         if (textareaRef.current) {
+          const regex = /^(https?:\/\/)?([^\s$.?#].[^\s]*)$/i;
+          if (regex.test(data)) {
+            setLink(data);
+          }
           textareaRef.current.value = data;
           autoResizeTextArea();
         }
@@ -303,6 +308,13 @@ export default function Home({ lastUpload }) {
           </form>
         </div>
 
+        {link && (
+          <div className="link">
+            <a href={link} target="_blank" rel="noopener noreferrer">
+              {link}
+            </a>
+          </div>
+        )}
         <textarea
           id="textarea"
           ref={textareaRef}
