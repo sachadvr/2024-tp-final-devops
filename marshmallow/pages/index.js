@@ -61,6 +61,7 @@ export default function Home() {
   }, "uploadUpdate");
 
   useEffect(() => {
+    if (textareaRef.current) textareaRef.current.focus();
     fetchFile();
     fetchFileName();
   }, [fetchFile, fetchFileName]);
