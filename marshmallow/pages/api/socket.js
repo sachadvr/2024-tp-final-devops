@@ -4,7 +4,7 @@ import path from 'path';
 
 let io;
 
-export default function handler(res) {
+export default function handler(req, res) {
   if (!io) {
     io = new Server(res.socket.server, {
       cors: {

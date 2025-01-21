@@ -16,6 +16,7 @@
     "next-connect": "^1.x",
     "react": "^18.x",
     "react-dom": "^18.x",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "socket.io": "^4.8.1"
   }
 }
