@@ -1,8 +1,7 @@
 import { useEffect, useState, useRef, use, useCallback } from 'react';
-import path from 'path';
-import fs from 'fs';
+import useWebSocketConnectionHook from "../hooks/useWebsocket";
 
-export default function Home({ lastUpload }) {
+export default function Home() {
   const textareaRef = useRef(null);
   const [notificationText, setNotificationText] = useState('Your changes have been saved');
   const [notificationClass, setNotificationClass] = useState('');
@@ -10,7 +9,6 @@ export default function Home({ lastUpload }) {
   const [currentFile, setCurrentFile] = useState('');
   const [isNotificationError, setIsNotificationError] = useState(false);
   const [link, setLink] = useState('');
-
   const fetchFile = useCallback(async () => {
     try {
       const res = await fetch('/api/get-file');
@@ -20,6 +18,8 @@ export default function Home({ lastUpload }) {
           const regex = /^(https?:\/\/)?([^\s$.?#].[^\s]*)$/i;
           if (regex.test(data)) {
             setLink(data);
+          }else {
+            setLink('');
           }
           textareaRef.current.value = data;
           autoResizeTextArea();
@@ -28,11 +28,43 @@ export default function Home({ lastUpload }) {
     } catch (err) {
       console.error(err);
     }
+   
   }, []);
+
+  const fetchFileName = useCallback(async () => {
+    try {
+      const res = await fetch('/api/get-filename');
+      if (res.ok) {
+        const data = await res.text();
+        setCurrentFile(data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
+
+  useWebSocketConnectionHook((data) => {
+    if (textareaRef.current) {
+          const regex = /^(https?:\/\/)?([^\s$.?#].[^\s]*)$/i;
+          if (regex.test(data.content)) {
+            setLink(data.content);
+          }else {
+            setLink('');
+          }
+          textareaRef.current.value = data.content;
+          autoResizeTextArea();
+        }
+  }, "contentUpdate");
+
+  useWebSocketConnectionHook((data) => {
+    setCurrentFile(data.filename);
+  }, "uploadUpdate");
 
   useEffect(() => {
     fetchFile();
-  }, [fetchFile]);
+    fetchFileName();
+  }, [fetchFile, fetchFileName]);
+
 
   const autoResizeTextArea = () => {
     if (!textareaRef.current) return;
@@ -73,7 +105,6 @@ export default function Home({ lastUpload }) {
     textArea.select();
     try {
       document.execCommand('copy');
-      console.log('Fallback: Text copied to clipboard');
     } catch (err) {
       console.error('Fallback: Could not copy text', err);
     }
@@ -212,7 +243,7 @@ export default function Home({ lastUpload }) {
           textContainer.innerText = 'File uploaded';
           showNotification('Successfully uploaded file, Refreshing page...');
           setTimeout(() => {
-            window.location.reload();
+            textContainer.innerText = 'Drag and drop files or text here';
           }, 1000);
         }else {
           showNotification('Error uploading file', true);
@@ -254,26 +285,32 @@ export default function Home({ lastUpload }) {
         <h1>Marshmallow <span>(v2)</span></h1>
 
         <div className="filename">
-          <a href={`/uploads/${lastUpload}`}>
-            <strong>{lastUpload}</strong>
+        {currentFile && (
+          <a href={`/uploads/${currentFile}`}>
+            <strong>{currentFile}</strong>
           </a>
+        )}
         </div>
         <br/>
 
-        <a href={`/uploads/${lastUpload}`} id="img">
+        <a href={`/uploads/${currentFile}`} id="img">
 
-          {lastUpload.toLowerCase().endsWith('.png') || lastUpload.toLowerCase().endsWith('.jpg') || lastUpload.toLowerCase().endsWith('.jpeg') || lastUpload.toLowerCase().endsWith('.gif') ?
+          {currentFile && (currentFile.toLowerCase().endsWith('.png') || currentFile.toLowerCase().endsWith('.jpg') || currentFile.toLowerCase().endsWith('.jpeg') || currentFile.toLowerCase().endsWith('.gif')) ?
             <img
-              src={`/uploads/${lastUpload}`}
+              src={`/uploads/${currentFile}`}
               onError={(e) => e.target.style.display = 'none'}
               alt=""
               width="100px"
               height="100px"
-            /> : <img 
-            src='default-icon.png' 
-            alt="" 
-            width="100px" 
-            height="100px" />
+            /> : null
+          }
+          {currentFile && !(currentFile.toLowerCase().endsWith('.png') || currentFile.toLowerCase().endsWith('.jpg') || currentFile.toLowerCase().endsWith('.jpeg') || currentFile.toLowerCase().endsWith('.gif')) ?
+            <img
+              src='default-icon.png'
+              alt=""
+              width="100px"
+              height="100px"
+            /> : null
           }
         </a>
         <br/>
@@ -328,7 +365,7 @@ export default function Home({ lastUpload }) {
           <a href="#" id="clear-button" onClick={handleClear}>❌</a>
           <a href="#" id="copy-button" onClick={handleCopy}>📋</a>
           <a href="#" id="paste-button" onClick={handlePaste}>📄</a>
-          <a href={`/uploads/${lastUpload}`} id="dl-button">⬇️</a>
+          <a href={`/uploads/${currentFile}`} id="dl-button">⬇️</a>
         </div>
 
         <br/>
@@ -345,30 +382,4 @@ export default function Home({ lastUpload }) {
       </div>
     </div>
   );
-}
-
-
-
-
-export async function getServerSideProps() {
-  const uploadsDir = path.join(process.cwd(), 'uploads');
-  let lastUpload = '';
-
-  try {
-    const files = fs.readdirSync(uploadsDir);
-    if (files.length > 0) {
-      files.sort((a, b) => {
-        const aTime = fs.statSync(path.join(uploadsDir, a)).mtime.getTime();
-        const bTime = fs.statSync(path.join(uploadsDir, b)).mtime.getTime();
-        return bTime - aTime;
-      });
-      lastUpload = files[0];
-    }
-  } catch (error) {
-    console.error('No uploads found or error reading uploads folder.', error);
-  }
-
-  return {
-    props: { lastUpload },
-  };
 }
