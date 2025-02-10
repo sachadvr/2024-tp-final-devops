@@ -58,10 +58,14 @@ export default function Home() {
 
   useWebSocketConnectionHook((data) => {
     setCurrentFile(data.filename);
+
+    // list all files
   }, "uploadUpdate");
+
 
   useEffect(() => {
     if (textareaRef.current) textareaRef.current.focus();
+    
     fetchFile();
     fetchFileName();
   }, [fetchFile, fetchFileName]);

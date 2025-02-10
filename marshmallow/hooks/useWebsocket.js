@@ -12,6 +12,7 @@ const useWebSocketConnectionHook = (cb, event) => {
       socket.on(event, (data) => {
         cb(data);
       });
+      
     });
 
     socket.on("disconnect", () => {
